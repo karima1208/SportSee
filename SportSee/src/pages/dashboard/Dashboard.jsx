@@ -4,7 +4,7 @@ import "./styles.scss";
 import BarChartComponent from "../../components/bar-chart/BarChartComponent";
 
 const Dashboard = () => {
-  const userId = 18;
+  const userId = 12;
   const [user, setUser] = useState(null);
   const [userActivities, setUserActivities] = useState (null);
   //const [loading, setLoading] = useState(true);
