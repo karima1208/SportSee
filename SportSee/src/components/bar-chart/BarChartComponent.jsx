@@ -1,30 +1,84 @@
+import {
+  BarChart,
+  Bar,
+  Cell,
+  XAxis,
+  YAxis,
+  CartesianGrid,
+  Tooltip,
+  Legend,
+  ResponsiveContainer,
+} from "recharts";
 
-import { BarChart, Bar, Cell, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts'
+/**
+ * BarChartComponent - Displays a bar chart of activity data.
+ *
+ * @component
+ *
+ * @param {*} props - The component props.
+ * @param {*} props.activities - The activity data.
+ *
+ * @returns {JSX.Element} The rendered bar chart.
+ */
+const BarChartComponent = ({ activities }) => {
+  const transformedData = activities.sessions.map((item, i) => ({
+    ...item,
+    index: i + 1,
+    kg: item.kilogram, // Rename "kilogram" to "kg"
+    Kcal: item.calories, // Rename "calories" to "Kcal"
+  }));
+  const customiseLegendText = (value, entry) => {
+    const { color } = entry;
+    if (value === "kg") {
+      return <span style={{ color }}>Poids ({value})</span>;
+    } else {
+      return <span style={{ color }}>Calories brûlées ({value})</span>;
+    }
+  };
 
-const BarChartComponent = ({activities}) => {
-  console.log(activities);
-  
+  return (
+    <ResponsiveContainer width="100%" height={265}>
+      <h2 className="ml-10 text-base">Activité quotidienne</h2>
+      <BarChart
+        height={260}
+        barSize={10}
+        data={transformedData}
+        margin={{
+          top: -25,
+          bottom: 10,
+        }}
+      >
+        <Legend
+          iconType="circle"
+          iconSize="8"
+          formatter={customiseLegendText}
+          verticalAlign="top"
+          align="right"
+          height={100}
+        />
+        <XAxis dataKey="index" tick={{ dy: 20 }} />
+        <YAxis yAxisId="left" orientation="left" stroke="#282D30" />
+        <YAxis yAxisId="right" orientation="right" stroke="#E60000" />
+        <Tooltip
+          contentStyle={{ backgroundColor: "#E60000", color: "white" }}
+          itemStyle={{ color: "#FFFFFF" }}
+          labelStyle={{ display: "none" }}
+        />
 
-    return (
-        <BarChart
-          width={1000}
-          height={300}
-          barSize={10}
-          data={activities.sessions.map((item,i) => ({...item, index : i+1}))}
-          margin={{
-            top: 20,
-            right: 30,
-            left: 20,
-            bottom: 5,
-          }}
-        >
-          <XAxis dataKey="index" />
-          <YAxis yAxisId="left" orientation="left" stroke="#282D30" />
-          <YAxis yAxisId="right" orientation="right" stroke="#E60000" />
-          <Tooltip />
-          <Bar yAxisId="left" dataKey="kilogram" fill="#282D30" />
-          <Bar yAxisId="right" dataKey="calories" fill="#E60000" />
-        </BarChart>
-    );
-}
+        <Bar
+          yAxisId="left"
+          dataKey="kg"
+          fill="#282D30"
+          radius={[10, 10, 0, 0]}
+        />
+        <Bar
+          yAxisId="right"
+          dataKey="Kcal"
+          fill="#E60000"
+          radius={[10, 10, 0, 0]}
+        />
+      </BarChart>
+    </ResponsiveContainer>
+  );
+};
 export default BarChartComponent;
